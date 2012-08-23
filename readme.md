@@ -39,7 +39,7 @@ The messages shown to the users in the backend can be customized (no lacalizatio
     </messages>
 
 ### Complete initial configuration
-## For reference or in case of emergency ;)
+#### For reference or in case of emergency ;)
     <?xml version="1.0" encoding="utf-8" ?>
     <uClamAV
         active="true"
