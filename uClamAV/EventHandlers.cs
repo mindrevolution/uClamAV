@@ -213,11 +213,11 @@ namespace uClamAV
               /// </summary>
               void HtmlContent(StringBuilder html)
                     {
-
+                        if(html.ToString()!=""){
                         StringBuilder csHtml = new StringBuilder();
                         csHtml.Append("<div class=\"propertypane\" style=\"border:1px solid red;color:red;margin:10px;\"><div><div  class=\"propertyItem\"></div>" + html.ToString() + "</div></div>");
                         this.control.Controls.Add(new System.Web.UI.LiteralControl("<script>$('" + csHtml.ToString() + "').insertBefore('.tabpageContent')</script>"));
-
+                        }
                     }
 
 
