@@ -232,9 +232,9 @@ namespace uClamAV
                         {
                             Process myProcess = new Process();
                             Config config = Config.GetConfig();
-                            if (File.Exists(System.Web.HttpContext.Current.Server.MapPath(config.Clam_path)))
+                            if (File.Exists(System.Web.HttpContext.Current.Server.MapPath(umbraco.GlobalSettings.Path + "/.." +config.Clam_path)))
                             {
-                                myProcess.StartInfo.FileName = myProcess.StartInfo.FileName = System.Web.HttpContext.Current.Server.MapPath(config.Clam_path); ;
+                                myProcess.StartInfo.FileName = myProcess.StartInfo.FileName = System.Web.HttpContext.Current.Server.MapPath(umbraco.GlobalSettings.Path + "/.." + config.Clam_path); ;
                                 string myprocarg = "\"" + @fullpath + "\"";
                                 myProcess.StartInfo.Arguments = myprocarg;
                                 myProcess.StartInfo.UseShellExecute = false;
@@ -340,49 +340,54 @@ namespace uClamAV
         void run_freshclam()
                     {
           
-
-                        try
+                        var config = Config.GetConfig();
+                        //System.Web.HttpContext.Current.Response.Write(config.Freshclam_path);
+                        //System.Web.HttpContext.Current.Response.End();
+                        if (File.Exists(System.Web.HttpContext.Current.Server.MapPath(config.Freshclam_path)))
                         {
-                            var config = Config.GetConfig();
-                            long ticksvalue = 0;
-                            if (!Directory.Exists(Directory.GetParent(System.Web.HttpContext.Current.Server.MapPath(config.Freshclam_path)).FullName + "/db"))
+                            try
                             {
-                                Directory.CreateDirectory(Directory.GetParent(System.Web.HttpContext.Current.Server.MapPath(config.Freshclam_path)).FullName + "/db");
-                            }
 
-                            string dirName = Directory.GetParent(System.Web.HttpContext.Current.Server.MapPath(config.Freshclam_path)).FullName + "/uClamAVfresh.data";
-                            if (File.Exists(dirName))
-                            {
-                                  FileInfo fileInfo = new FileInfo(dirName);
-                                  ticksvalue = fileInfo.LastWriteTime.Ticks;
-                                   int time_intervall =6;
-                                   if (!Int32.TryParse(config.Freshclamintervall, out time_intervall))
-                                   {
-                                       time_intervall = 0;
-                                   }
+                                long ticksvalue = 0;
+                                if (!Directory.Exists(Directory.GetParent(System.Web.HttpContext.Current.Server.MapPath(umbraco.GlobalSettings.Path + "/.." + config.Freshclam_path)).FullName + "/db"))
+                                {
+                                    Directory.CreateDirectory(Directory.GetParent(System.Web.HttpContext.Current.Server.MapPath(umbraco.GlobalSettings.Path + "/.." + config.Freshclam_path)).FullName + "/db");
+                                }
+
+                                string dirName = Directory.GetParent(System.Web.HttpContext.Current.Server.MapPath(umbraco.GlobalSettings.Path + "/.." + config.Freshclam_path)).FullName + "/uClamAVfresh.data";
+                                if (File.Exists(dirName))
+                                {
+                                    FileInfo fileInfo = new FileInfo(dirName);
+                                    ticksvalue = fileInfo.LastWriteTime.Ticks;
+                                    int time_intervall = 6;
+                                    if (!Int32.TryParse(config.Freshclamintervall, out time_intervall))
+                                    {
+                                        time_intervall = 0;
+                                    }
                                     if ((new DateTime(ticksvalue).AddHours(time_intervall).Ticks) < DateTime.Now.Ticks)
-                                   {
+                                    {
 
 
-                                       File.Delete(dirName);
-                                       System.IO.FileStream f = System.IO.File.Create(dirName);
-                                       f.Close();
+                                        File.Delete(dirName);
+                                        System.IO.FileStream f = System.IO.File.Create(dirName);
+                                        f.Close();
 
-                                       run_Freshclam_pross();
-                                   }
+                                        run_Freshclam_pross();
+                                    }
 
+                                }
+                                else
+                                {
+                                    System.IO.FileStream f = System.IO.File.Create(dirName);
+                                    f.Close();
+                                    run_Freshclam_pross();
+                                }
                             }
-                            else
+                            catch (Exception ex)
                             {
-                                System.IO.FileStream f = System.IO.File.Create(dirName);
-                                f.Close();
-                                run_Freshclam_pross();
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            umbraco.BasePages.BasePage.Current.ClientTools.ShowSpeechBubble(umbraco.BasePages.BasePage.speechBubbleIcon.error, " ERORR", ex.Message);
+                                umbraco.BasePages.BasePage.Current.ClientTools.ShowSpeechBubble(umbraco.BasePages.BasePage.speechBubbleIcon.error, " ERORR", ex.Message);
 
+                            }
                         }
                     }
 
@@ -397,9 +402,9 @@ namespace uClamAV
               
                 
                             Process myProcess = new Process();
-                            if (File.Exists(System.Web.HttpContext.Current.Server.MapPath(config.Freshclam_path)))
+                            if (File.Exists(System.Web.HttpContext.Current.Server.MapPath(umbraco.GlobalSettings.Path + "/.." + config.Freshclam_path)))
                             {
-                                myProcess.StartInfo.FileName = myProcess.StartInfo.FileName = System.Web.HttpContext.Current.Server.MapPath(config.Freshclam_path); ;
+                                myProcess.StartInfo.FileName = myProcess.StartInfo.FileName = System.Web.HttpContext.Current.Server.MapPath(umbraco.GlobalSettings.Path + "/.." + config.Freshclam_path);
                                 myProcess.Start();
                                 myProcess.StartInfo.UseShellExecute = false;
                                 myProcess.StartInfo.CreateNoWindow = true;
