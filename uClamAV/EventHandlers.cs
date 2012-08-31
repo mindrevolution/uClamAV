@@ -144,7 +144,7 @@ namespace uClamAV
                                             re_bool = false;
                                             break;
                                         case 1:
-                                            this.html_msg.Append(fileprop.Value.ToString() + "  Virus(es) found <br/>");
+                                            this.html_msg.Append(fileprop.Value.ToString() + " "+  get_virusfound_message() +"<br/>");
 
                                             try
                                             {
